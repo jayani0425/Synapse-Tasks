@@ -1,0 +1,129 @@
+import random
+class ChessPlayer:
+    k=0
+
+    def __init__(self):
+        self.player = []
+        self.age = []
+        self.elo = []
+        self.tenacity = []
+        self.isBoring = []
+        self.score = []
+
+    def getdata(self, n):
+        print("n =",n)
+        for i in range (0,n):
+            sp = input("Enter name of player"+str(i+1)+":")
+            self.player.append(sp)
+            ia = input("Enter age of player"+str(i+1)+":")
+            self.age.append(ia)
+            de = input("Enter ELO of player"+str(i+1)+":")
+            self.elo.append(de)
+            it = input("Enter tenacity of player"+str(i+1)+":")
+            self.tenacity.append(it)
+            bib = input("Enter whether player is Boring:")
+            self.isBoring.append(bib)
+            self.score.append(0)
+            print()
+        print("Player names:", self.player)
+        print("Player ages:", self.age)
+        print("Player ELOs:", self.elo)
+        print("Player Tenacity:", self.tenacity)
+        print("Player Boring?", self.isBoring)
+        #print(self.score)
+
+    def rank(self, n, pl, a, e, t, ib):
+        for i in range(0,n):
+            for j in range(0,n):
+
+                if(j!=i):
+                    d = abs(float(e[i]) - float(e[j]))
+
+                    if (e[i] < e[j]):
+                        min = i
+                        max = j
+                    else:
+                        min = j
+                        max = i
+
+                    sc1 = float(self.score[min])
+                    sc2 = float(self.score[max])
+
+                    if (((bool(ib[max]) == True) or (bool(ib[min]) == True)) and (d <= 100)):
+                        sc2 = sc2 + 0.5
+                        self.score[max] = sc2
+                        sc1 = sc1 + 0.5
+                        self.score[min] = sc1
+                        flag = True
+                    else:
+                        flag = False
+
+                    if(flag == False):
+                        if (d > 100):
+                            win = pl[max]
+                            sc2 = sc2 + 1
+                            self.score[max] = sc2
+                        if (d >= 50) and (d < 100):
+                            temp = t[min] * random.randrange(1, 10)
+                            if (temp < e[max]):
+                                win = pl[max]
+                                sc2 = sc2 + 1
+                                self.score[max] = sc2
+                            else:
+                                win = pl[min]
+                                sc1 = sc1 + 1
+                                self.score[min] = sc1
+                        if (d < 50):
+                            if (t[max] > t[min]):
+                                win = pl[max]
+                                sc2 = sc2 + 1
+                                self.score[max] = sc2
+                            else:
+                                win = pl[min]
+                                sc1 = sc1 + 1
+                                self.score[min] = sc1
+                else:
+                    continue
+        print()
+
+        print ("Player Scores:", self.score)
+
+    def display(self,n):
+        for k1 in range(0, n-1):
+            for k2 in range(0,n-1):
+                if (self.score[k2]<self.score[k1]):
+                    temp = self.score[k1]
+                    self.score[k1] = self.score[k2]
+                    self.score[k2] = temp
+
+                    temp = self.player[k1]
+                    self.player[k1] = self.player[k2]
+                    self.player[k2] = temp
+
+                    temp = self.age[k1]
+                    self.age[k1] = self.age[k2]
+                    self.age[k2] = temp
+
+                    temp = self.elo[k1]
+                    self.elo[k1] = self.elo[k2]
+                    self.elo[k2] = temp
+
+                    temp = self.tenacity[k1]
+                    self.tenacity[k1] = self.tenacity[k2]
+                    self.tenacity[k2] = temp
+
+                    temp = self.isBoring[k1]
+                    self.isBoring[k1] = self.isBoring[k2]
+                    self.isBoring[k2] = temp
+
+        print("Name     Age     ELO     Tenacity    Boring      Scores")
+        for i in range(0, n):
+            print(self.player[i],"    ",self.age[i],"     ",self.elo[i],"     ",self.tenacity[i],"    ",self.isBoring[i],"    ",self.score[i])
+
+
+p = input("Enter number of players")
+
+obj = ChessPlayer()
+obj.getdata(int(p))
+obj.rank(int(p), obj.player, obj.age, obj.elo, obj.tenacity, obj.isBoring)
+obj.display(int(p))
